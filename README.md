@@ -33,7 +33,8 @@ EAR = (||p2 - p6|| + ||p3 - p5||) / (2.0 * ||p1 - p4||)
 
 ```text
 Drowsiness-Detector/
-├── app.py                      # Core Streamlit WebRTC application script
+├── app.py                    # Core Streamlit WebRTC application script(Using geometry)
+├── app1.py                   # Using deep learning
 ├── requirements.txt            # Python package dependencies for deployment
 ├── .gitignore                  # Excludes local environments and document clutter
 ├── README.md                   # Project documentation and setup guide
@@ -94,8 +95,15 @@ pip install -r requirements.txt
 ### 5. Run the Application
 
 ```bash
-streamlit run app.py
+streamlit run app.py      
 ```
+
+Using Geometry
+
+```bash
+streamlit run app1.py     
+```
+Using MobileNetV2
 
 ---
 
