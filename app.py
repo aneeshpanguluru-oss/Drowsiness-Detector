@@ -70,10 +70,16 @@ class DrowsinessProcessor(VideoProcessorBase):
 st.title("🚗 Geometric Drowsiness Detection")
 st.write("Detecting sleepiness using Eye Aspect Ratio (EAR) calculations.")
 # Replace your existing webrtc_streamer block with this:
-rtc_configuration={
-        "iceServers": [
-            {"urls": ["stun:stun.l.google.com:19302"]},
-            {"urls": ["stun:stun1.l.google.com:19302"]},
-            {"urls": ["stun:stun2.l.google.com:19302"]}
-        ]
-    }
+# Use this exact block to ensure the video stream initializes properly
+webrtc_streamer(
+    key="drowsiness",
+    video_processor_factory=DrowsinessProcessor,
+    rtc_configuration={
+        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+    },
+    media_stream_constraints={
+        "video": True,
+        "audio": False
+    },
+    async_processing=True
+)
