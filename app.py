@@ -73,14 +73,11 @@ st.write("Detecting sleepiness using Eye Aspect Ratio (EAR) calculations.")
 webrtc_streamer(
     key="drowsiness",
     video_processor_factory=DrowsinessProcessor,
-    rtc_configuration={
-        "iceServers": [
-            {"urls": ["stun:stun.l.google.com:19302"]},
-            {"urls": ["stun:stun1.l.google.com:19302"]},
-            {"urls": ["stun:stun2.l.google.com:19302"]},
-            {"urls": ["stun:stun3.l.google.com:19302"]},
-            {"urls": ["stun:stun4.l.google.com:19302"]}
-        ]
+    media_stream_constraints={
+        "video": True,
+        "audio": False  # This prevents the browser from ever opening your mic
     },
-    async_processing=True,
+    rtc_configuration={
+        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+    }
 )
