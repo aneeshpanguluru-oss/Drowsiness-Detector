@@ -1,0 +1,9 @@
+.venv/
+.venv-1/
+__pycache__/
+*.zip
+*.docx
+drowsiness_detector_report.docx
+literature review/
+data/
+shape_predictor_68_face_landmarks.dat
