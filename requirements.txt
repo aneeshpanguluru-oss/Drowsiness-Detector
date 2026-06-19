@@ -4,4 +4,4 @@ tensorflow==2.15.0
 cmake
 dlib-bin
 numpy
-opencv-contrib-python
+opencv-contrib-python-headless
