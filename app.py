@@ -112,6 +112,12 @@ ctx = webrtc_streamer(
     video_processor_factory=DrowsinessProcessor,
     media_stream_constraints={"video": True, "audio": False},
     async_processing=True,
+    # ADD THIS BLOCK BELOW TO RESOLVE THE CLOUD HANDSHAKE ERROR:
+    rtc_configuration={
+        "iceServers": [
+            {"urls": ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"]}
+        ]
+    }
 )
 
 # Trigger global interface alert audio rendering safely outside the video threading worker
