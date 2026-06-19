@@ -1,0 +1,7 @@
+streamlit
+streamlit-webrtc
+tensorflow-intel==2.20.0
+cmake
+dlib-bin
+numpy
+opencv-contrib-python
