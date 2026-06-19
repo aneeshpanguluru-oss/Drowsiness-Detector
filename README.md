@@ -6,7 +6,7 @@ This high-performance real-time drowsiness detection web application is built wi
 
 ---
 
-## 🚀 Features
+## Features
 
 - **Pure Geometric Tracking:** Uses dlib's 68-point facial landmark predictor to measure eyelid distance mathematically.
 - **Shadow & Light Immunity:** Outperforms pixel-intensity models by tracking physical eye coordinates rather than raw image gradients.
@@ -16,7 +16,7 @@ This high-performance real-time drowsiness detection web application is built wi
 
 ---
 
-## 📐 Core Methodology: Eye Aspect Ratio (EAR)
+## Core Methodology: Eye Aspect Ratio (EAR)
 
 The application tracks facial coordinates to map the eye regions. For each eye, six landmarks are extracted to calculate the Eye Aspect Ratio (EAR) using the following geometric relationship:
 
@@ -29,7 +29,7 @@ EAR = (||p2 - p6|| + ||p3 - p5||) / (2.0 * ||p1 - p4||)
 
 ---
 
-## 📂 Project Directory Structure
+## Project Directory Structure
 
 ```text
 Drowsiness-Detector/
@@ -43,7 +43,7 @@ Drowsiness-Detector/
 
 ---
 
-## ⚙️ System Threshold Parameters
+## System Threshold Parameters
 
 Through testing and optimization, the configuration thresholds have been tuned to prevent false alarms from natural blinking while maximizing responsiveness:
 
@@ -56,7 +56,7 @@ Through testing and optimization, the configuration thresholds have been tuned t
 
 ---
 
-## 🛠️ Local Installation & Setup
+## Local Installation & Setup
 
 ### 1. Clone the Repository
 
@@ -99,7 +99,7 @@ streamlit run app.py
 
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 The core libraries listed in `requirements.txt`:
 
