@@ -3,8 +3,11 @@ import cv2
 import numpy as np
 import streamlit as st
 import dlib
+import urllib.request
+import bz2
 from av import VideoFrame
 from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
+
 # Cross-platform sound configuration for Windows vs Linux Cloud
 try:
     import winsound
@@ -18,11 +21,29 @@ PREDICTOR_PATH = os.path.join(BASE_DIR, "shape_predictor_68_face_landmarks.dat")
 @st.cache_resource
 def load_dlib():
     detector = dlib.get_frontal_face_detector()
-    # Check if weights file exists before trying to load it
-    if os.path.exists(PREDICTOR_PATH):
-        predictor = dlib.shape_predictor(PREDICTOR_PATH)
-    else:
-        predictor = None
+    
+    # If the model file doesn't exist on the server, download it automatically
+    if not os.path.exists(PREDICTOR_PATH):
+        with st.spinner("Downloading facial landmark predictor model weights (~64MB)... Please wait."):
+            try:
+                # Direct link to the compressed dlib model weights mirror
+                url = "https://github.com/italojs/facial-landmarks-recognition/raw/master/shape_predictor_68_face_landmarks.dat.bz2"
+                compressed_path = PREDICTOR_PATH + ".bz2"
+                
+                # Download the compressed archive
+                urllib.request.urlretrieve(url, compressed_path)
+                
+                # Decompress it inline on the server
+                with bz2.BZ2File(compressed_path) as fr, open(PREDICTOR_PATH, "wb") as fw:
+                    fw.write(fr.read())
+                
+                # Clean up the downloaded temporary archive file
+                os.remove(compressed_path)
+            except Exception as e:
+                st.error(f"Failed to auto-download model weights: {e}")
+                return detector, None
+
+    predictor = dlib.shape_predictor(PREDICTOR_PATH)
     return detector, predictor
 
 detector, predictor = load_dlib()
