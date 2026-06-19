@@ -1,7 +1,6 @@
 streamlit
 streamlit-webrtc
-tensorflow==2.15.0
-cmake
+opencv-python-headless
 dlib-bin
 numpy
-opencv-contrib-python-headless
+av
