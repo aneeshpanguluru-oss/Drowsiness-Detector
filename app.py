@@ -47,25 +47,22 @@ def calculate_ear(eye_pts):
     return ear
 
 def draw_eye_box(img, eye_pts, color=(0, 255, 0), thickness=2):
-    # Extract all x and y coordinates for the eye landmarks
     x_coords = [pt.x for pt in eye_pts]
     y_coords = [pt.y for pt in eye_pts]
     
-    # Find minimum and maximum boundaries to establish the rectangle coordinates
     x_min, x_max = min(x_coords), max(x_coords)
     y_min, y_max = min(y_coords), max(y_coords)
     
-    # Add a little padding around the eye so the box isn't suffocatingly tight
-    padding_x = 5
-    padding_y = 5
+    # ADJUST THESE VALUE PADDING PARAMETERS RIGHT HERE:
+    padding_width = 15   # Increase this to make the boxes wider on the sides
+    padding_height = 6   # Keep this lower so the box doesn't go too high into your eyebrows
     
-    # Draw the rectangular box
+    # Map the adjusted coordinates into the rectangle drawer
     cv2.rectangle(img, 
-                  (x_min - padding_x, y_min - padding_y), 
-                  (x_max + padding_x, y_max + padding_y), 
+                  (x_min - padding_width, y_min - padding_height), 
+                  (x_max + padding_width, y_max + padding_height), 
                   color, 
                   thickness)
-
 class DrowsinessProcessor(VideoProcessorBase):
     def __init__(self):
         self.drowsy_frames = 0
@@ -115,15 +112,19 @@ class DrowsinessProcessor(VideoProcessorBase):
         return VideoFrame.from_ndarray(img, format="bgr24")
 
 # Streamlit real-time network signaling container initialization mapping
+# Streamlit real-time network signaling container initialization mapping
 webrtc_streamer(
     key="drowsiness-detection",
     mode=WebRtcMode.SENDRECV,
     video_processor_factory=DrowsinessProcessor,
     media_stream_constraints={"video": True, "audio": False},
     async_processing=True,
+    # Updated firewall-immune network configuration mapping
     rtc_configuration={
         "iceServers": [
-            {"urls": ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"]}
+            {"urls": ["stun:global.stun.twilio.com:3478?transport=udp"]},
+            {"urls": ["stun:stun.l.google.com:19302"]},
+            {"urls": ["stun:stun.services.mozilla.com"]}
         ]
     }
 )
