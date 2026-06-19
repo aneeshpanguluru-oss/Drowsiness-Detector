@@ -1,6 +1,6 @@
 streamlit
 streamlit-webrtc
-tensorflow-intel==2.20.0
+tensorflow==2.15.0
 cmake
 dlib-bin
 numpy
