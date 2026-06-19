@@ -104,7 +104,7 @@ class DrowsinessProcessor(VideoProcessorBase):
                 self.drowsy_frames = 0
                 box_color = (0, 255, 0)  # Green boxes when awake
 
-            # Draw the normal square bounding boxes over the eyes instead of point dots
+            # Draw the square bounding boxes over the eyes instead of point dots
             draw_eye_box(img, left_eye, color=box_color, thickness=2)
             draw_eye_box(img, right_eye, color=box_color, thickness=2)
 
