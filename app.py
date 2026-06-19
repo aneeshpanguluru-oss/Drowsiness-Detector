@@ -36,17 +36,35 @@ st.write("This application tracks your eye aspect ratio natively to detect sleep
 # Standard Euclidean distance formula calculation using normal square method
 def calculate_ear(eye_pts):
     # Vertical distances using standard square difference and square root (Euclidean Distance)
-    # p2 - p6
     v1 = np.sqrt((eye_pts[1].x - eye_pts[5].x)**2 + (eye_pts[1].y - eye_pts[5].y)**2)
-    # p3 - p5
     v2 = np.sqrt((eye_pts[2].x - eye_pts[4].x)**2 + (eye_pts[2].y - eye_pts[4].y)**2)
     
-    # Horizontal distance: p1 - p4
+    # Horizontal distance
     h = np.sqrt((eye_pts[0].x - eye_pts[3].x)**2 + (eye_pts[0].y - eye_pts[3].y)**2)
     
     # Calculate Eye Aspect Ratio (EAR)
     ear = (v1 + v2) / (2.0 * h)
     return ear
+
+def draw_eye_box(img, eye_pts, color=(0, 255, 0), thickness=2):
+    # Extract all x and y coordinates for the eye landmarks
+    x_coords = [pt.x for pt in eye_pts]
+    y_coords = [pt.y for pt in eye_pts]
+    
+    # Find minimum and maximum boundaries to establish the rectangle coordinates
+    x_min, x_max = min(x_coords), max(x_coords)
+    y_min, y_max = min(y_coords), max(y_coords)
+    
+    # Add a little padding around the eye so the box isn't suffocatingly tight
+    padding_x = 5
+    padding_y = 5
+    
+    # Draw the rectangular box
+    cv2.rectangle(img, 
+                  (x_min - padding_x, y_min - padding_y), 
+                  (x_max + padding_x, y_max + padding_y), 
+                  color, 
+                  thickness)
 
 class DrowsinessProcessor(VideoProcessorBase):
     def __init__(self):
@@ -74,29 +92,23 @@ class DrowsinessProcessor(VideoProcessorBase):
             
             ear = (left_ear + right_ear) / 2.0
             
-            # Draw green landmark circles on the video frame overlay layout
-            for n in range(36, 48):
-                x = landmarks.part(n).x
-                y = landmarks.part(n).y
-                cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
-
-            # Execution threshold logic check directly inside the real-time frame frame matrix
+            # Check threshold logic to decide bounding box colors
             if ear < 0.23:
                 self.drowsy_frames += 1
+                box_color = (0, 0, 255)  # Red boxes when drowsy
                 
-                # If eyes are closed for more than 15 consecutive frames
                 if self.drowsy_frames >= 15:
-                    # 1. Paint a glaring visual alert directly inside the video stream
                     cv2.putText(img, "DROWSINESS ALERT!", (10, 50),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
-                    
-                    # 2. Inject an audio beep frequency directly into the frame stream using openCV's audio pipeline
-                    # This completely bypasses the browser block and works universally on all OS types!
-                    cv2.beep(frequency=1000, duration_ms=200)
             else:
                 self.drowsy_frames = 0
+                box_color = (0, 255, 0)  # Green boxes when awake
 
-            # Display your real-time live numeric tracking calculation ratio value
+            # Draw the normal square bounding boxes over the eyes instead of point dots
+            draw_eye_box(img, left_eye, color=box_color, thickness=2)
+            draw_eye_box(img, right_eye, color=box_color, thickness=2)
+
+            # Display real-time numeric EAR tracking ratio
             cv2.putText(img, f"EAR: {ear:.2f}", (10, 90),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
 
