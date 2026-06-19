@@ -17,28 +17,20 @@ except ImportError:
 # Set landmark path relative to this file's folder
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PREDICTOR_PATH = os.path.join(BASE_DIR, "shape_predictor_68_face_landmarks.dat")
-
 @st.cache_resource
 def load_dlib():
     detector = dlib.get_frontal_face_detector()
     
     # If the model file doesn't exist on the server, download it automatically
     if not os.path.exists(PREDICTOR_PATH):
-        with st.spinner("Downloading facial landmark predictor model weights (~64MB)... Please wait."):
+        with st.spinner("Downloading facial landmark predictor model weights (~97MB)... Please wait."):
             try:
-                # Direct link to the compressed dlib model weights mirror
-                url = "https://github.com/italojs/facial-landmarks-recognition/raw/master/shape_predictor_68_face_landmarks.dat.bz2"
-                compressed_path = PREDICTOR_PATH + ".bz2"
+                # Stable direct mirror url to the uncompressed .dat file
+                url = "https://github.com/spmallick/PyImageConf2018/raw/master/shape_predictor_68_face_landmarks.dat"
                 
-                # Download the compressed archive
-                urllib.request.urlretrieve(url, compressed_path)
+                # Download directly to the destination path
+                urllib.request.urlretrieve(url, PREDICTOR_PATH)
                 
-                # Decompress it inline on the server
-                with bz2.BZ2File(compressed_path) as fr, open(PREDICTOR_PATH, "wb") as fw:
-                    fw.write(fr.read())
-                
-                # Clean up the downloaded temporary archive file
-                os.remove(compressed_path)
             except Exception as e:
                 st.error(f"Failed to auto-download model weights: {e}")
                 return detector, None
