@@ -4,8 +4,7 @@ import numpy as np
 import streamlit as st
 import dlib
 from av import VideoFrame
-from streamlit_webrtc import组件 webrtc_streamer, VideoProcessorBase, WebRtcMode
-
+from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, WebRtcMode
 # Cross-platform sound configuration for Windows vs Linux Cloud
 try:
     import winsound
